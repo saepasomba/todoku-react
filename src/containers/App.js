@@ -2,6 +2,11 @@ import './App.css';
 import SearchBar from '../components/SearchBar'
 import CustomButton from '../components/CustomButton';
 
+
+export function addButtonClicked() {
+    console.log('hello')
+}
+
 function App() {
   return (
     <div className="container w-1/2 mx-auto text-center">

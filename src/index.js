@@ -1,13 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './containers/App';
+import App, { addButtonClicked } from './containers/App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import AddTask from './containers/AddTask';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<App />} />
+        <Route path='/add' element={<AddTask addFunc={addButtonClicked} />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
