@@ -19,6 +19,38 @@ function App() {
     setTasks(data)
   }
 
+  const taskCompleteToggle = (task) => {
+    let tempTasks = JSON.parse(JSON.stringify(tasks))
+    let targetTask = tempTasks.find(e => e.id === task.id)
+    targetTask.complete = !targetTask.complete
+    setTasks(tempTasks)
+  }
+
+  const addTask = (task) => {
+    setTasks(tasks.push(task))
+  }
+
+  const deleteTask = (task) => {
+    let newTasks = tasks.filter(e => e.id !== task.id)
+    setTasks(newTasks)
+  }
+
+  const editTask = (task, update) => {
+    let tempTasks = JSON.parse(JSON.stringify(tasks))
+    let targetTask = tempTasks.find(e => e.id === task.id)
+    targetTask.task = update
+    setTasks(tempTasks)
+  }
+
+  const deleteDoneTasks = () => {
+    let newTasks = tasks.filter(task => !task.complete)
+    setTasks(newTasks)
+  }
+
+  const deleteAllTasks = () => {
+    setTasks([])
+  }
+
   useEffect(() => {
     loadData()
   }, [])
@@ -40,7 +72,7 @@ function App() {
         {
           tasks.length > 0
           ? tasks.map(task => {
-            return <TaskRow key={task.id} task={task} />
+            return <TaskRow key={task.id} task={task} doneToggle={taskCompleteToggle} deleteTask={deleteTask} />
           })
           : <h2>Add new task now!</h2>
         }
