@@ -1,6 +1,10 @@
 import './App.css';
 import SearchBar from '../components/SearchBar'
 import CustomButton from '../components/CustomButton';
+import TaskRow from '../components/TaskRow';
+
+import data from '../data.json'
+import { useEffect, useState } from 'react';
 
 
 export function addButtonClicked() {
@@ -8,6 +12,17 @@ export function addButtonClicked() {
 }
 
 function App() {
+
+  const [tasks, setTasks] = useState([])
+
+  const loadData = async () => {
+    setTasks(data)
+  }
+
+  useEffect(() => {
+    loadData()
+  }, [])
+  console.log(tasks)
   return (
     <div className="container w-1/2 mx-auto text-center">
       <h1 className='font-bold text-5xl m-3'>Todoku</h1>
@@ -20,6 +35,17 @@ function App() {
           <CustomButton content='Add new task' />
         </div>
       </div>
+
+      <div className='container my-10 flex flex-col gap-2'>
+        {
+          tasks.length > 0
+          ? tasks.map(task => {
+            return <TaskRow key={task.id} task={task} />
+          })
+          : <h2>Add new task now!</h2>
+        }
+      </div>
+
     </div>
   );
 }
