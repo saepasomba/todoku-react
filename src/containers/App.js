@@ -16,6 +16,7 @@ function App() {
 
   const [tasks, setTasks] = useState([])
   const [searchBar, setSearchBar] = useState('')
+  const [filter, setFilter] = useState('ALL')
   const navigate = useNavigate()
 
   let tasksToShow = JSON.parse(JSON.stringify(tasks))
@@ -23,6 +24,19 @@ function App() {
   if (searchBar.length > 0) {
     tasksToShow = tasksToShow.filter(e => e.task.toLowerCase().includes(searchBar.toLowerCase()))
   }
+
+ switch (filter) {
+  case 'DONE':
+    tasksToShow = tasksToShow.filter(e => e.complete)
+    break;
+
+  case 'TODO':
+    tasksToShow = tasksToShow.filter(e => !e.complete)
+    break;
+
+  default:
+    break;
+ }
 
 
   const loadData = async () => {
@@ -69,6 +83,18 @@ function App() {
     navigate('/add')
   }
 
+  const filterDone = () => {
+    setFilter('DONE')
+  }
+
+  const filterTodo = () => {
+    setFilter('TODO')
+  }
+
+  const filterAll = () => {
+    setFilter('ALL')
+  }
+
   useEffect(() => {
     loadData()
   }, [])
@@ -82,16 +108,16 @@ function App() {
           <CustomButton content='Search' />
         </div>
         <div className='container header-right'>
-          <CustomButton content='Add new task' buttonFunction={redirectToCustomPage}/>
+          <CustomButton content='Add new task' buttonFunction={redirectToCustomPage} />
         </div>
       </div>
 
       <div className='container my-3'>
         <h2 className='text-2xl font-bold my-3'>Todo List</h2>
         <div className='container flex justify-center gap-5'>
-          <CustomButton content='All' />
-          <CustomButton content='Done' />
-          <CustomButton content='Todo' />
+          <CustomButton content='All' buttonFunction={filterAll} isActive={filter === 'ALL'} />
+          <CustomButton content='Done' buttonFunction={filterDone} isActive={filter === 'DONE'} />
+          <CustomButton content='Todo' buttonFunction={filterTodo} isActive={filter === 'TODO'} />
         </div>
       </div>
 
@@ -101,7 +127,7 @@ function App() {
           ? tasksToShow.map(task => {
             return <TaskRow key={task.id} task={task} doneToggle={taskCompleteToggle} deleteTask={deleteTask} />
           })
-          : <h2>Add new task!</h2>
+          : <h2>No task here</h2>
         }
       </div>
 
