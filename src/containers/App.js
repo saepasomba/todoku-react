@@ -18,6 +18,13 @@ function App() {
   const [searchBar, setSearchBar] = useState('')
   const navigate = useNavigate()
 
+  let tasksToShow = JSON.parse(JSON.stringify(tasks))
+
+  if (searchBar.length > 0) {
+    tasksToShow = tasksToShow.filter(e => e.task.toLowerCase().includes(searchBar.toLowerCase()))
+  }
+
+
   const loadData = async () => {
     setTasks(data)
   }
@@ -65,6 +72,7 @@ function App() {
   useEffect(() => {
     loadData()
   }, [])
+
   return (
     <div className="container w-1/2 mx-auto text-center">
       <h1 className='font-bold text-5xl m-3'>Todoku</h1>
@@ -78,17 +86,22 @@ function App() {
         </div>
       </div>
 
+      <div className='container my-3'>
+        <h2 className='text-2xl font-bold my-3'>Todo List</h2>
+        <div className='container flex justify-center gap-5'>
+          <CustomButton content='All' />
+          <CustomButton content='Done' />
+          <CustomButton content='Todo' />
+        </div>
+      </div>
+
       <div className='container my-10 flex flex-col gap-2'>
         {
-          tasks.length > 0
-          ? searchBar.length > 0
-            ? tasks.filter(e => e.task.toLowerCase().includes(searchBar.toLowerCase())).map(task => {
-              return <TaskRow key={task.id} task={task} doneToggle={taskCompleteToggle} deleteTask={deleteTask} />
-            })
-            : tasks.map(task => {
-              return <TaskRow key={task.id} task={task} doneToggle={taskCompleteToggle} deleteTask={deleteTask} />
-            })
-          : <h2>Add new task now!</h2>
+          tasksToShow.length > 0
+          ? tasksToShow.map(task => {
+            return <TaskRow key={task.id} task={task} doneToggle={taskCompleteToggle} deleteTask={deleteTask} />
+          })
+          : <h2>Add new task!</h2>
         }
       </div>
 
