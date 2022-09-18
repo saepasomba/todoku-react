@@ -100,7 +100,7 @@ function App() {
   }, [])
 
   return (
-    <div className="container w-1/2 mx-auto text-center">
+    <div className="container relative md:w-1/2 mx-auto text-center sm:w-10/12">
       <h1 className='font-bold text-5xl m-3'>Todoku</h1>
       <div className='container header grid grid-cols-[70%_30%] gap-5 justify-center items-end mx-auto p-5 rounded-lg border border-gray-500'>
         <div className='header-left flex flex-col gap-2'>
@@ -121,7 +121,7 @@ function App() {
         </div>
       </div>
 
-      <div className='container my-10 flex flex-col gap-2'>
+      <div className='container my-10 mb-24 flex flex-col gap-2'>
         {
           tasksToShow.length > 0
           ? tasksToShow.map(task => {
@@ -130,7 +130,13 @@ function App() {
           : <h2>No task here</h2>
         }
       </div>
-
+      
+      <div className='container footer my-5 fixed bottom-0 md:w-1/2 sm:w-10/12'>
+        <div className='grid grid-cols-2 gap-4'>
+          <CustomButton content='Delete done tasks' type='danger' buttonFunction={deleteDoneTasks} />
+          <CustomButton content='Delete all tasks' type='danger' buttonFunction={deleteAllTasks} />
+        </div>
+      </div>
     </div>
   );
 }
