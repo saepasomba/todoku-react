@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App, { addButtonClicked } from './containers/App';
+import App from './containers/App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AddTask from './containers/AddTask';
@@ -12,7 +12,7 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<App />} />
-        <Route path='/add' element={<AddTask addFunc={addButtonClicked} />} />
+        <Route path='/add' element={<AddTask />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

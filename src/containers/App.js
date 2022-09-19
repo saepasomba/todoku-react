@@ -8,10 +8,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
-export function addButtonClicked() {
-    console.log('hello')
-}
-
 function App() {
 
   const [tasks, setTasks] = useState([])
@@ -39,8 +35,20 @@ function App() {
  }
 
 
-  const loadData = async () => {
-    setTasks(data)
+  const loadData = () => {
+    let currentTasks = JSON.parse(localStorage.getItem('currentTasks'))
+    if (currentTasks !== null) {
+      let meta = JSON.parse(localStorage.getItem('meta'))
+      let newTasks = []
+      if (meta.action === 'ADD') {
+        newTasks = addTask(meta.task, currentTasks)
+      } else {
+        newTasks = editTask(meta.task, currentTasks)
+      }
+      setTasks(newTasks)
+    } else {
+      setTasks(data)
+    }
   }
 
   const taskCompleteToggle = (task) => {
@@ -50,8 +58,12 @@ function App() {
     setTasks(tempTasks)
   }
 
-  const addTask = (task) => {
-    setTasks(tasks.push(task))
+  const addTask = (task, tasksSource) => {
+    let tasksCopy = JSON.parse(JSON.stringify(tasksSource))
+    if (task?.task?.length > 0) {
+      tasksCopy.push(task)
+    }
+    return tasksCopy
   }
 
   const deleteTask = (task) => {
@@ -59,11 +71,13 @@ function App() {
     setTasks(newTasks)
   }
 
-  const editTask = (task, update) => {
-    let tempTasks = JSON.parse(JSON.stringify(tasks))
-    let targetTask = tempTasks.find(e => e.id === task.id)
-    targetTask.task = update
-    setTasks(tempTasks)
+  const editTask = (task, tasksSource) => {
+    let tempTasks = JSON.parse(JSON.stringify(tasksSource))
+    if (task?.task?.length > 0) {
+      let targetTask = tempTasks.find(e => e.id === task.id)
+      targetTask.task = task.task
+    }
+    return tempTasks
   }
 
   const deleteDoneTasks = () => {
@@ -79,7 +93,19 @@ function App() {
     setSearchBar(event.target.value)
   }
 
-  const redirectToCustomPage = () => {
+  const redirectToCustomPage = (task) => {
+    let passedMeta = {
+      action: null,
+      task: task
+    }
+    if (task === null) {
+      passedMeta.action = 'ADD'
+    } else {
+      passedMeta.action = 'EDIT'
+    }
+    
+    localStorage.setItem('meta', JSON.stringify(passedMeta))
+    localStorage.setItem('currentTasks', JSON.stringify(tasks))
     navigate('/add')
   }
 
@@ -108,7 +134,7 @@ function App() {
           <CustomButton content='Search' />
         </div>
         <div className='container header-right'>
-          <CustomButton content='Add new task' buttonFunction={redirectToCustomPage} />
+          <CustomButton content='Add new task' buttonFunction={() => redirectToCustomPage(null)} />
         </div>
       </div>
 
@@ -125,7 +151,8 @@ function App() {
         {
           tasksToShow.length > 0
           ? tasksToShow.map(task => {
-            return <TaskRow key={task.id} task={task} doneToggle={taskCompleteToggle} deleteTask={deleteTask} />
+            console.log(tasksToShow)
+            return <TaskRow key={task.id} task={task} doneToggle={taskCompleteToggle} deleteTask={deleteTask} redirectToCustomPage={redirectToCustomPage} />
           })
           : <h2>No task here</h2>
         }
