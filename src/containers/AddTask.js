@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { SiBookstack } from 'react-icons/si'
-import { redirect, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import CustomButton from '../components/CustomButton'
 
 export default function AddTask() {
@@ -33,8 +33,7 @@ export default function AddTask() {
             taskCopy.task = textField;
             newMeta.task = taskCopy
         }
-        console.log('NEW META')
-        console.log(newMeta)
+
         localStorage.setItem('meta', JSON.stringify(newMeta))
 
         navigate('/')

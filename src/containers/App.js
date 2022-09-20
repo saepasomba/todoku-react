@@ -34,23 +34,6 @@ function App() {
     break;
  }
 
-
-  const loadData = () => {
-    let currentTasks = JSON.parse(localStorage.getItem('currentTasks'))
-    let meta = JSON.parse(localStorage.getItem('meta'))
-    if (currentTasks !== null) {
-      let newTasks = []
-      if (meta.action === 'ADD') {
-        newTasks = addTask(meta.task, currentTasks)
-      } else {
-        newTasks = editTask(meta.task, currentTasks)
-      }
-      setTasks(newTasks)
-    } else {
-      setTasks(data)
-    }
-  }
-
   const taskCompleteToggle = (task) => {
     let tempTasks = JSON.parse(JSON.stringify(tasks))
     let targetTask = tempTasks.find(e => e.id === task.id)
@@ -122,6 +105,21 @@ function App() {
   }
 
   useEffect(() => {
+    const loadData = () => {
+      let currentTasks = JSON.parse(localStorage.getItem('currentTasks'))
+      let meta = JSON.parse(localStorage.getItem('meta'))
+      if (currentTasks !== null) {
+        let newTasks = []
+        if (meta.action === 'ADD') {
+          newTasks = addTask(meta.task, currentTasks)
+        } else {
+          newTasks = editTask(meta.task, currentTasks)
+        }
+        setTasks(newTasks)
+      } else {
+        setTasks(data)
+      }
+    }
     loadData()
   }, [])
 
