@@ -37,8 +37,8 @@ function App() {
 
   const loadData = () => {
     let currentTasks = JSON.parse(localStorage.getItem('currentTasks'))
+    let meta = JSON.parse(localStorage.getItem('meta'))
     if (currentTasks !== null) {
-      let meta = JSON.parse(localStorage.getItem('meta'))
       let newTasks = []
       if (meta.action === 'ADD') {
         newTasks = addTask(meta.task, currentTasks)
@@ -127,9 +127,9 @@ function App() {
 
   return (
     <div className="container relative md:w-1/2 mx-auto text-center sm:w-10/12">
-      <h1 className='font-bold text-5xl m-3'>Todoku</h1>
+      <h1 className='font-bold text-3xl m-3'>TodoSearch</h1>
       <div className='container header grid grid-cols-[70%_30%] gap-5 justify-center items-end mx-auto p-5 rounded-lg border border-gray-500'>
-        <div className='header-left flex flex-col gap-2'>
+        <div className='header-left flex flex-col gap-2 w-4/5'>
           <SearchBar handleChange={searchBarChange} />
           <CustomButton content='Search' />
         </div>
@@ -139,7 +139,7 @@ function App() {
       </div>
 
       <div className='container my-3'>
-        <h2 className='text-2xl font-bold my-3'>Todo List</h2>
+        <h2 className='text-3xl font-normal my-3'>TodoList</h2>
         <div className='container flex justify-center gap-5'>
           <CustomButton content='All' buttonFunction={filterAll} isActive={filter === 'ALL'} />
           <CustomButton content='Done' buttonFunction={filterDone} isActive={filter === 'DONE'} />
@@ -151,7 +151,6 @@ function App() {
         {
           tasksToShow.length > 0
           ? tasksToShow.map(task => {
-            console.log(tasksToShow)
             return <TaskRow key={task.id} task={task} doneToggle={taskCompleteToggle} deleteTask={deleteTask} redirectToCustomPage={redirectToCustomPage} />
           })
           : <h2>No task here</h2>
