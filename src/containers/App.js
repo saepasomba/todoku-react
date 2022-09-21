@@ -38,6 +38,7 @@ function App() {
     let tempTasks = JSON.parse(JSON.stringify(tasks))
     let targetTask = tempTasks.find(e => e.id === task.id)
     targetTask.complete = !targetTask.complete
+    localStorage.setItem('currentTasks', JSON.stringify(tempTasks))
     setTasks(tempTasks)
   }
 
@@ -51,6 +52,7 @@ function App() {
 
   const deleteTask = (task) => {
     let newTasks = tasks.filter(e => e.id !== task.id)
+    localStorage.setItem('currentTasks', JSON.stringify(newTasks))
     setTasks(newTasks)
   }
 
@@ -65,10 +67,12 @@ function App() {
 
   const deleteDoneTasks = () => {
     let newTasks = tasks.filter(task => !task.complete)
+    localStorage.setItem('currentTasks', JSON.stringify(newTasks))
     setTasks(newTasks)
   }
 
   const deleteAllTasks = () => {
+    localStorage.setItem('currentTasks', JSON.stringify([]))
     setTasks([])
   }
 
@@ -89,7 +93,7 @@ function App() {
     
     localStorage.setItem('meta', JSON.stringify(passedMeta))
     localStorage.setItem('currentTasks', JSON.stringify(tasks))
-    navigate('/add')
+    navigate('/add', {state:{access: 'Legal Access'}})
   }
 
   const filterDone = () => {
@@ -108,15 +112,18 @@ function App() {
     const loadData = () => {
       let currentTasks = JSON.parse(localStorage.getItem('currentTasks'))
       let meta = JSON.parse(localStorage.getItem('meta'))
-      if (currentTasks !== null) {
+      if (currentTasks !== null && meta !== null) {
         let newTasks = []
         if (meta.action === 'ADD') {
           newTasks = addTask(meta.task, currentTasks)
         } else {
           newTasks = editTask(meta.task, currentTasks)
         }
+        localStorage.setItem('meta', JSON.stringify({action: 'ADD', task: {}}))
+        localStorage.setItem('currentTasks', JSON.stringify(newTasks))
         setTasks(newTasks)
       } else {
+        localStorage.setItem('currentTasks', JSON.stringify(data))
         setTasks(data)
       }
     }

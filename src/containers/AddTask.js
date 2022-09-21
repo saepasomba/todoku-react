@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { SiBookstack } from 'react-icons/si'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import CustomButton from '../components/CustomButton'
 
 export default function AddTask() {
@@ -11,6 +11,7 @@ export default function AddTask() {
     const [illegalAccess, setIllegalAccess] = useState(false)
 
     const navigate = useNavigate()
+    const location = useLocation();
 
     const handleChange = (event) => {
         setTextField(event.target.value)
@@ -39,15 +40,19 @@ export default function AddTask() {
         navigate('/')
     }
 
+    const backToHome = () => {
+        navigate('/')
+    }
+
     useEffect(() => {
+        console.log(location)
         if (localStorage.length === 0) {
-            // let urgentMeta = {
-            //     action: 'ADD',
-            //     task: null
-            // }
-            // localStorage.setItem('meta', JSON.stringify(urgentMeta))
             setIllegalAccess(true)
         } else {
+            if(location.state === undefined || location.state == null || location.state === '') {
+                setIllegalAccess(true)
+                return
+            }
             let meta = JSON.parse(localStorage.getItem('meta'))
             if (meta.action === 'EDIT') {
                 setTextField(meta.task.task)
@@ -61,7 +66,10 @@ export default function AddTask() {
 
     if (illegalAccess) {
         return (
-            <h1 className='text-center text-4xl'>Please access this page through the main page.</h1>
+            <div className='w-1/2 mx-auto my-5'>
+                <h1 className='text-center text-4xl mb-5'>Please access this page through the main page.</h1>
+                <CustomButton content='Back' buttonFunction={backToHome} />
+            </div>
         )
     }
     return (
