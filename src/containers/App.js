@@ -119,13 +119,13 @@ function App() {
         } else {
           newTasks = editTask(meta.task, currentTasks)
         }
-        localStorage.setItem('meta', JSON.stringify({action: 'ADD', task: {}}))
         localStorage.setItem('currentTasks', JSON.stringify(newTasks))
         setTasks(newTasks)
       } else {
         localStorage.setItem('currentTasks', JSON.stringify(data))
         setTasks(data)
       }
+      localStorage.setItem('meta', JSON.stringify({action: 'ADD', task: {}}))
     }
     loadData()
   }, [])
