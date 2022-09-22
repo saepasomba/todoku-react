@@ -17,23 +17,26 @@ function App() {
 
   let tasksToShow = JSON.parse(JSON.stringify(tasks))
 
+  // Filtering based on searchbar
   if (searchBar.length > 0) {
     tasksToShow = tasksToShow.filter(e => e.task.toLowerCase().includes(searchBar.toLowerCase()))
   }
 
- switch (filter) {
-  case 'DONE':
-    tasksToShow = tasksToShow.filter(e => e.complete)
-    break;
+  // Filtering based on completion
+  switch (filter) {
+    case 'DONE':
+      tasksToShow = tasksToShow.filter(e => e.complete)
+      break;
 
-  case 'TODO':
-    tasksToShow = tasksToShow.filter(e => !e.complete)
-    break;
+    case 'TODO':
+      tasksToShow = tasksToShow.filter(e => !e.complete)
+      break;
 
-  default:
-    break;
- }
+    default:
+      break;
+    }
 
+ // Toggle task completion
   const taskCompleteToggle = (task) => {
     let tempTasks = JSON.parse(JSON.stringify(tasks))
     let targetTask = tempTasks.find(e => e.id === task.id)
@@ -42,6 +45,7 @@ function App() {
     setTasks(tempTasks)
   }
 
+  // Add task passed from localstorage data
   const addTask = (task, tasksSource) => {
     let tasksCopy = JSON.parse(JSON.stringify(tasksSource))
     if (task?.task?.length > 0) {
@@ -50,12 +54,14 @@ function App() {
     return tasksCopy
   }
 
+  // Delete task
   const deleteTask = (task) => {
     let newTasks = tasks.filter(e => e.id !== task.id)
     localStorage.setItem('currentTasks', JSON.stringify(newTasks))
     setTasks(newTasks)
   }
 
+  // Edit task passed from localstorage data
   const editTask = (task, tasksSource) => {
     let tempTasks = JSON.parse(JSON.stringify(tasksSource))
     if (task?.task?.length > 0) {
@@ -65,26 +71,32 @@ function App() {
     return tempTasks
   }
 
+  // Delete done tasks
   const deleteDoneTasks = () => {
     let newTasks = tasks.filter(task => !task.complete)
     localStorage.setItem('currentTasks', JSON.stringify(newTasks))
     setTasks(newTasks)
   }
 
+  // Delete all tasks
   const deleteAllTasks = () => {
     localStorage.setItem('currentTasks', JSON.stringify([]))
     setTasks([])
   }
 
+  // Continously track the change of the search bar
   const searchBarChange = (event) => {
     setSearchBar(event.target.value)
   }
 
+  // Redirecting to add/edit page with prep
   const redirectToCustomPage = (task) => {
     let passedMeta = {
       action: null,
       task: task
     }
+
+    // If task is present, then the action = edit, else, add
     if (task === null) {
       passedMeta.action = 'ADD'
     } else {
@@ -96,6 +108,8 @@ function App() {
     navigate('/add', {state:{access: 'Legal Access'}})
   }
 
+
+  // Set filter
   const filterDone = () => {
     setFilter('DONE')
   }
@@ -112,6 +126,8 @@ function App() {
     const loadData = () => {
       let currentTasks = JSON.parse(localStorage.getItem('currentTasks'))
       let meta = JSON.parse(localStorage.getItem('meta'))
+
+      // When instructions clear
       if (currentTasks !== null && meta !== null) {
         let newTasks = []
         if (meta.action === 'ADD') {
@@ -121,6 +137,8 @@ function App() {
         }
         localStorage.setItem('currentTasks', JSON.stringify(newTasks))
         setTasks(newTasks)
+      
+      // Initial render
       } else {
         localStorage.setItem('currentTasks', JSON.stringify(data))
         setTasks(data)

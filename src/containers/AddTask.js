@@ -10,7 +10,7 @@ export default function AddTask() {
     const [task, setTask] = useState()
     const [illegalAccess, setIllegalAccess] = useState(false)
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const location = useLocation();
 
     const handleChange = (event) => {
@@ -45,7 +45,6 @@ export default function AddTask() {
     }
 
     useEffect(() => {
-        console.log(location)
         if (localStorage.length === 0) {
             setIllegalAccess(true)
         } else {
